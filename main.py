@@ -12,11 +12,13 @@ def scan_event():
     ip = ip_field.get()
     file = file_field.get()
 
+    if file == "":
+        file = "scan"
+
     print("Starting Scan...")
     
-        #use nmap to scan the ip address
-    os.system("nmap -sP -Pn -O -sS " + ip + " > " + file + ".txt")
-    
+    #use nmap to scan the ip address
+    os.system("nmap " + ip + " > " + file + ".txt")
     print("Scan Complete")
 
 
@@ -27,6 +29,7 @@ customtkinter.set_appearance_mode("dark")
 customtkinter.set_default_color_theme("dark-blue")
 
 root = customtkinter.CTk()
+root.iconbitmap("images/capto.ico")
 root.grid_rowconfigure(3, weight=1)
 root.grid_columnconfigure((0, 2), weight=1)
 root.title("Capto: Network Scanner")
@@ -52,6 +55,11 @@ file_field.pack(pady=20, padx=60, fill="both", expand=False)
 #Scan Button
 label = customtkinter.CTkButton(master=frame1, text="Scan", font=("Lato", 20), width=140, height=40, command=lambda: scan_event())
 label.pack(pady=20, padx=60, fill="both", expand=False)
+
+
+
+
+
 
 
 
