@@ -1,0 +1,1 @@
+image = customtkinter.CTkImage(master=frame2, image="images/capto.png", width=140, height=140)
