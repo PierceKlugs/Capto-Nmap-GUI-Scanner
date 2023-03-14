@@ -1,6 +1,8 @@
 import customtkinter
 import os
-import plotly
+import plotly.graph_objects as go
+import networkx as nx
+import matplotlib.pyplot as plt
 
 def scan_event():
     #scan device with nmap using the ip address output txt file
@@ -54,9 +56,45 @@ def scan_event():
         os.system("nmap " + ip + " > " + "output\\"+ file + ".txt")
         print("Scan Complete")
 
-        return
+    #create a network graph for every report line starting with "Nmap scan report for"
+    print("Creating Graph...")
+    G = nx.Graph()
+    with open("output\\" + file + ".txt", "r") as f:
+        for line in f:
+            if "Nmap scan report for" in line:
+                G.add_node(line.split(" ")[4])
+
+    print("Graph Created")
+
+    #if multiple nodes, add edges between them
+    if len(G.nodes) > 1:
+        print("Adding Edges...")
+        with open("output\\" + file + ".txt", "r") as f:
+            for line in f:
+                if "Nmap scan report for" in line:
+                    ip1 = line.split(" ")[4]
+                elif "Host is up" in line:
+                    ip2 = line.split(" ")[4]
+                    G.add_edge(ip1, ip2)
     
-    image_results = customtkinter.CTkImage(master=frame2, image="images/output.png", width=1000, height=500)
+    print("Edges Added")
+
+    #draw the graph
+    print("Drawing Graph...")
+    #draw the graph with #212121 background, light blue nodes, and white text
+    plt.figure(figsize=(20, 20))
+    pos = nx.spring_layout(G)
+    nx.draw(G, pos, with_labels=True, node_color="#1e90ff", edge_color="#1e90ff", font_color="white", font_size=10, node_size=1000, width=2, alpha=0.8, background_color="#212121")
+
+    print("Graph Drawn")
+
+    plt.savefig("output\\" + file + "-results" + ".png", format="PNG")
+    
+
+    return
+
+
+    #image_results = customtkinter.CTkImage(master=frame2, image="images/output.png", width=1000, height=500)
 
     #TODO: Open the file and get the results (common ports, # of devices pinged, etc.)
 
