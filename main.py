@@ -4,9 +4,6 @@ import plotly.graph_objects as go
 import networkx as nx
 import matplotlib.pyplot as plt
 
-
-
-
 def scan_event():
     #Error checking
     #Check if IP Address field is empty
